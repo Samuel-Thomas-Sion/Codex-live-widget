@@ -1,38 +1,3 @@
-<!DOCTYPE html>
-<html>
-
-<head>
-<meta charset="UTF-8">
-<title>Codex Live Members</title>
-
-<style>
-body{
-margin:0;
-padding:10px;
-font-family:Arial;
-background:#070d18;
-color:#e6f1ff;
-}
-
-.member{
-background:#1f3b5c;
-padding:10px;
-border-radius:12px;
-margin-bottom:8px;
-}
-
-.time{
-font-size:12px;
-opacity:0.7;
-margin-top:4px;
-}
-</style>
-</head>
-
-<body>
-
-<div id="members">Loading newest operatives...</div>
-
 <script>
 
 const WORKER_URL = "https://bitter-salad-ff3e.aneenaanniejohnson.workers.dev/";
@@ -47,36 +12,49 @@ async function loadMembers(){
     const parser = new DOMParser();
     const doc = parser.parseFromString(html, "text/html");
 
-    const usernames = [...doc.querySelectorAll("a")]
-      .map(a => a.textContent.trim())
-      .filter(name => name.length > 2)
-      .slice(0,3);
-
     const container = document.getElementById("members");
-
     container.innerHTML = "";
 
-    usernames.forEach((name,index)=>{
+    // Grab member rows
+    const rows = [...doc.querySelectorAll("tr")].slice(0,3);
 
-      const div = document.createElement("div");
-      div.className = "member";
+    rows.forEach(row => {
 
-      const times = [
-        "Joined 12 seconds ago",
-        "Joined 4 minutes ago",
-        "Joined 1 hour ago"
-      ];
+      const links = row.querySelectorAll("a");
 
-      div.innerHTML = `
-        <b>${name}</b>
-        <div class="time">${times[index]}</div>
-      `;
+      if(links.length > 0){
 
-      container.appendChild(div);
+        const username = links[0].textContent.trim();
+
+        // Try grabbing joined text
+        let joinedText = "Joined recently";
+
+        const rowText = row.textContent;
+
+        const joinedMatch =
+          rowText.match(/joined.*?(minute|hour|day|second)s?\sago/i);
+
+        if(joinedMatch){
+          joinedText = joinedMatch[0];
+        }
+
+        const div = document.createElement("div");
+        div.className = "member";
+
+        div.innerHTML = `
+          <b>${username}</b>
+          <div class="time">${joinedText}</div>
+        `;
+
+        container.appendChild(div);
+
+      }
 
     });
 
-  } catch(err){
+  }
+
+  catch(err){
 
     document.getElementById("members").innerHTML =
       "⚠️ Unable to load member data.";
@@ -90,6 +68,3 @@ loadMembers();
 setInterval(loadMembers,30000);
 
 </script>
-
-</body>
-</html>
