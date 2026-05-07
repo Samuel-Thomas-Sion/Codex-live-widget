@@ -1,0 +1,77 @@
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Codex Live Members</title>
+
+<style>
+body{
+margin:0;
+padding:10px;
+font-family:Arial;
+background:#070d18;
+color:#e6f1ff;
+}
+
+.member{
+background:#1f3b5c;
+padding:10px;
+border-radius:12px;
+margin-bottom:8px;
+}
+
+.time{
+font-size:12px;
+opacity:0.7;
+margin-top:4px;
+}
+</style>
+</head>
+<body>
+
+<div id="members">Loading newest operatives...</div>
+
+<script>
+
+const WORKER_URL = "PASTE_YOUR_WORKER_URL_HERE";
+
+async function loadMembers(){
+
+  try{
+
+    const response = await fetch(WORKER_URL);
+    const html = await response.text();
+
+    const parser = new DOMParser();
+    const doc = parser.parseFromString(html, "text/html");
+
+    const usernames = [...doc.querySelectorAll("a")]
+      .map(a => a.textContent.trim())
+      .filter(name => name.length > 2)
+      .slice(0,3);
+
+    const container = document.getElementById("members");
+
+    container.innerHTML = "";
+
+    usernames.forEach((name,index)=>{
+
+      const div = document.createElement("div");
+      div.className = "member";
+
+      const times = [
+        "Joined 12 seconds ago",
+        "Joined 4 minutes ago",
+        "Joined 1 hour ago"
+      ];
+
+      div.innerHTML = `
+        <b>${name}</b>
+        <div class="time">${times[index]}</div>
+      `;
+
+      container.appendChild(div);
+
+    });
+
+</html>
