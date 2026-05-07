@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
 <meta charset="UTF-8">
 <title>Codex Live Members</title>
@@ -27,13 +28,14 @@ margin-top:4px;
 }
 </style>
 </head>
+
 <body>
 
 <div id="members">Loading newest operatives...</div>
 
 <script>
 
-const WORKER_URL = "PASTE_YOUR_WORKER_URL_HERE";
+const WORKER_URL = "https://bitter-salad-ff3e.aneenaanniejohnson.workers.dev/";
 
 async function loadMembers(){
 
@@ -74,4 +76,20 @@ async function loadMembers(){
 
     });
 
+  } catch(err){
+
+    document.getElementById("members").innerHTML =
+      "⚠️ Unable to load member data.";
+
+  }
+
+}
+
+loadMembers();
+
+setInterval(loadMembers,30000);
+
+</script>
+
+</body>
 </html>
