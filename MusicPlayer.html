@@ -1,466 +1,272 @@
-<!-- ⚔️ SILENT COMMAND AUDIO SYSTEM -->
-<link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<!DOCTYPE html>
+<html>
+<head>
+<meta charset="UTF-8">
+<title>Silent Command Player</title>
 
 <style>
-:root{
-  --bg-main:#07111f;
-  --bg-card:#0c1828;
-  --bg-soft:#101f33;
-  --line:#1c3552;
-  --line2:#29496d;
-  --text:#dce9f7;
-  --muted:#7f9bb8;
-  --accent:#6ec1ff;
-  --accent2:#89d7ff;
-  --glow:rgba(110,193,255,.28);
-}
 
-.silent-player{
-  width:100%;
-  max-width:420px;
-  height:430px;
-  background:
-    linear-gradient(180deg,#091321,#07111f);
-  border:1px solid var(--line);
-  border-radius:16px;
+html,body{
+  margin:0;
+  padding:0;
+  background:transparent;
   overflow:hidden;
-  font-family:'Inter',sans-serif;
-  position:relative;
-  box-shadow:
-    0 0 30px rgba(0,0,0,.35),
-    inset 0 1px 0 rgba(255,255,255,.03);
+  font-family:Arial,sans-serif;
+}
+
+body{
+  background:#07111f;
+}
+
+.player{
+  width:100%;
+  height:430px;
+  background:linear-gradient(180deg,#081321,#07111f);
+  border-radius:18px;
+  overflow:hidden;
+  color:white;
+  box-sizing:border-box;
+  padding:18px;
+  border:1px solid #17304a;
+}
+
+.top{
   display:flex;
-  flex-direction:column;
-}
-
-/* subtle grid overlay */
-.silent-player::before{
-  content:'';
-  position:absolute;
-  inset:0;
-  background:
-    linear-gradient(rgba(255,255,255,.02) 1px, transparent 1px),
-    linear-gradient(90deg, rgba(255,255,255,.02) 1px, transparent 1px);
-  background-size:22px 22px;
-  opacity:.18;
-  pointer-events:none;
-}
-
-/* header */
-.sp-head{
-  padding:16px 18px 12px;
-  border-bottom:1px solid rgba(255,255,255,.04);
-  position:relative;
-  z-index:2;
-}
-
-.sp-top{
-  display:flex;
-  align-items:center;
   justify-content:space-between;
-  margin-bottom:10px;
+  align-items:flex-start;
 }
 
-.sp-title{
+.title{
+  color:#72c7ff;
   font-size:16px;
-  font-weight:700;
-  letter-spacing:.8px;
-  color:var(--accent2);
-}
-
-.sp-sub{
-  font-size:11px;
-  color:var(--muted);
-  letter-spacing:1.5px;
-  text-transform:uppercase;
-}
-
-.sp-status{
-  display:flex;
-  align-items:center;
-  gap:7px;
-  font-size:10px;
-  color:#9ecfff;
+  font-weight:bold;
   letter-spacing:1px;
 }
 
-.dot{
-  width:8px;
-  height:8px;
-  border-radius:50%;
-  background:#7dd3ff;
-  box-shadow:0 0 10px #7dd3ff;
-  animation:pulse 2s infinite;
+.sub{
+  color:#6f8aa8;
+  font-size:11px;
+  margin-top:4px;
+  letter-spacing:2px;
 }
 
-@keyframes pulse{
-  0%{opacity:.45}
-  50%{opacity:1}
-  100%{opacity:.45}
-}
-
-/* now playing */
-.now{
-  margin:14px 16px 12px;
-  padding:16px;
-  background:
-    linear-gradient(145deg,
-      rgba(255,255,255,.03),
-      rgba(255,255,255,.01));
-  border:1px solid rgba(255,255,255,.05);
-  border-radius:14px;
-  backdrop-filter:blur(6px);
-  position:relative;
-  z-index:2;
-}
-
-.nw-row{
-  display:flex;
-  align-items:center;
-  gap:14px;
-}
-
-.disc{
-  width:58px;
-  height:58px;
-  border-radius:50%;
-  background:
-    radial-gradient(circle at center,
-      #16314e 0%,
-      #0a1524 65%);
-  border:1px solid rgba(110,193,255,.18);
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  font-size:18px;
+.live{
   color:#9ed8ff;
-  animation:spin 10s linear infinite;
+  font-size:12px;
 }
 
-@keyframes spin{
-  to{transform:rotate(360deg);}
+.card{
+  margin-top:18px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.05);
+  border-radius:18px;
+  padding:18px;
 }
 
 .song{
-  flex:1;
-  min-width:0;
+  text-align:center;
 }
 
-.song-name{
-  font-size:16px;
-  font-weight:600;
-  color:var(--text);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
+.song h2{
+  margin:10px 0 4px;
+  font-size:22px;
 }
 
-.artist{
-  margin-top:4px;
-  font-size:12px;
-  color:var(--muted);
-}
-
-/* progress */
-.prog{
-  margin-top:16px;
+.song p{
+  margin:0;
+  color:#89a6c4;
 }
 
 .bar{
   width:100%;
   height:6px;
+  background:#12253a;
   border-radius:999px;
-  background:#13253b;
+  margin-top:20px;
   overflow:hidden;
-  position:relative;
 }
 
 .fill{
-  width:58%;
+  width:0%;
   height:100%;
-  background:
-    linear-gradient(90deg,
-      #4faeff,
-      #89d7ff);
-  border-radius:999px;
-  box-shadow:0 0 12px var(--glow);
+  background:linear-gradient(90deg,#61b8ff,#8bd8ff);
 }
 
 .time{
-  margin-top:6px;
   display:flex;
   justify-content:space-between;
-  font-size:10px;
-  color:var(--muted);
+  color:#7f9abb;
+  font-size:12px;
+  margin-top:6px;
 }
 
-/* controls */
-.ctrls{
+.controls{
   display:flex;
   justify-content:center;
-  align-items:center;
-  gap:14px;
-  margin-top:18px;
-}
-
-.btn{
-  width:38px;
-  height:38px;
-  border-radius:12px;
-  border:1px solid rgba(255,255,255,.06);
-  background:rgba(255,255,255,.03);
-  color:#b6dfff;
-  display:flex;
-  align-items:center;
-  justify-content:center;
-  cursor:pointer;
-  transition:.18s;
-}
-
-.btn:hover{
-  transform:translateY(-1px);
-  border-color:rgba(110,193,255,.22);
-  background:rgba(110,193,255,.08);
+  margin-top:22px;
 }
 
 .play{
-  width:52px;
-  height:52px;
-  border-radius:16px;
-  background:
-    linear-gradient(145deg,
-      #58b6ff,
-      #7fd5ff);
-  color:#04101c;
+  width:70px;
+  height:70px;
+  border-radius:20px;
   border:none;
-  font-size:18px;
-  font-weight:700;
-  box-shadow:0 0 18px rgba(110,193,255,.28);
+  cursor:pointer;
+  background:linear-gradient(145deg,#61b8ff,#84d9ff);
+  color:#04101a;
+  font-size:28px;
+  font-weight:bold;
+  box-shadow:0 0 20px rgba(97,184,255,.35);
 }
 
 .play:hover{
   transform:scale(1.04);
 }
 
-/* playlist */
-.pl-wrap{
-  flex:1;
-  min-height:0;
-  padding:0 14px 14px;
-  position:relative;
-  z-index:2;
+.queue{
+  margin-top:22px;
 }
 
-.pl-head{
-  display:flex;
-  justify-content:space-between;
-  align-items:center;
-  margin-bottom:10px;
-}
-
-.pl-title{
-  font-size:11px;
-  letter-spacing:1.8px;
-  text-transform:uppercase;
-  color:var(--muted);
-  font-weight:700;
-}
-
-.pl-count{
-  font-size:10px;
-  padding:4px 8px;
-  border-radius:999px;
-  background:rgba(110,193,255,.08);
-  color:#9fd7ff;
-  border:1px solid rgba(110,193,255,.1);
-}
-
-.pl{
-  height:100%;
-  overflow-y:auto;
-  padding-right:4px;
-}
-
-.pl::-webkit-scrollbar{
-  width:4px;
-}
-
-.pl::-webkit-scrollbar-thumb{
-  background:#2f5d89;
-  border-radius:999px;
+.q-title{
+  color:#87cfff;
+  font-size:12px;
+  letter-spacing:3px;
+  margin-bottom:12px;
 }
 
 .track{
-  display:flex;
-  align-items:center;
-  gap:10px;
+  background:rgba(255,255,255,.03);
+  border:1px solid rgba(255,255,255,.04);
   padding:10px 12px;
   border-radius:12px;
   margin-bottom:8px;
-  background:rgba(255,255,255,.02);
-  border:1px solid rgba(255,255,255,.04);
-  transition:.18s;
-  cursor:pointer;
 }
 
-.track:hover{
-  background:rgba(110,193,255,.05);
-  border-color:rgba(110,193,255,.12);
+.track-name{
+  font-size:14px;
 }
 
-.track.active{
-  background:rgba(110,193,255,.08);
-  border-color:rgba(110,193,255,.18);
-}
-
-.num{
-  width:20px;
+.track-artist{
+  color:#7694b4;
   font-size:11px;
-  color:#7ea8cf;
-  font-weight:600;
-}
-
-.t-info{
-  flex:1;
-  min-width:0;
-}
-
-.t-name{
-  font-size:13px;
-  color:var(--text);
-  white-space:nowrap;
-  overflow:hidden;
-  text-overflow:ellipsis;
-}
-
-.t-artist{
-  font-size:11px;
-  color:var(--muted);
   margin-top:2px;
 }
 
-.t-len{
-  font-size:11px;
-  color:#89cfff;
-}
 </style>
+</head>
 
-<div class="silent-player">
+<body>
 
-  <!-- HEADER -->
-  <div class="sp-head">
+<div class="player">
 
-    <div class="sp-top">
-      <div>
-        <div class="sp-title">AUDIO COMMAND</div>
-        <div class="sp-sub">Silent Operations Interface</div>
-      </div>
+  <div class="top">
 
-      <div class="sp-status">
-        <div class="dot"></div>
-        LIVE
-      </div>
+    <div>
+      <div class="title">AUDIO COMMAND</div>
+      <div class="sub">SILENT OPERATIONS INTERFACE</div>
+    </div>
+
+    <div class="live">● LIVE</div>
+
+  </div>
+
+  <div class="card">
+
+    <div class="song">
+
+      <div style="font-size:52px;">♫</div>
+
+      <h2>Night Protocol</h2>
+      <p>Command Archive Network</p>
+
+    </div>
+
+    <div class="bar">
+      <div class="fill" id="fill"></div>
+    </div>
+
+    <div class="time">
+      <span id="current">0:00</span>
+      <span id="duration">0:00</span>
+    </div>
+
+    <div class="controls">
+      <button class="play" id="playBtn">▶</button>
     </div>
 
   </div>
 
-  <!-- NOW PLAYING -->
-  <div class="now">
+  <div class="queue">
 
-    <div class="nw-row">
-
-      <div class="disc">♫</div>
-
-      <div class="song">
-        <div class="song-name">Night Protocol</div>
-        <div class="artist">Command Archive Network</div>
-      </div>
-
+    <div class="q-title">
+      TRANSMISSION QUEUE
     </div>
 
-    <div class="prog">
-
-      <div class="bar">
-        <div class="fill"></div>
-      </div>
-
-      <div class="time">
-        <span>02:14</span>
-        <span>03:51</span>
-      </div>
-
-    </div>
-
-    <!-- CONTROLS -->
-    <div class="ctrls">
-
-      <div class="btn">⏮</div>
-
-      <div class="btn play">▶</div>
-
-      <div class="btn">⏭</div>
-
-    </div>
-
-  </div>
-
-  <!-- PLAYLIST -->
-  <div class="pl-wrap">
-
-    <div class="pl-head">
-      <div class="pl-title">Transmission Queue</div>
-      <div class="pl-count">05 TRACKS</div>
-    </div>
-
-    <div class="pl">
-
-      <div class="track active">
-        <div class="num">01</div>
-        <div class="t-info">
-          <div class="t-name">Night Protocol</div>
-          <div class="t-artist">Archive Division</div>
-        </div>
-        <div class="t-len">3:51</div>
-      </div>
-
-      <div class="track">
-        <div class="num">02</div>
-        <div class="t-info">
-          <div class="t-name">Cold Horizon</div>
-          <div class="t-artist">Signal Unit</div>
-        </div>
-        <div class="t-len">4:12</div>
-      </div>
-
-      <div class="track">
-        <div class="num">03</div>
-        <div class="t-info">
-          <div class="t-name">Silent Command</div>
-          <div class="t-artist">Operations Core</div>
-        </div>
-        <div class="t-len">2:59</div>
-      </div>
-
-      <div class="track">
-        <div class="num">04</div>
-        <div class="t-info">
-          <div class="t-name">Orbital Relay</div>
-          <div class="t-artist">Sector Array</div>
-        </div>
-        <div class="t-len">5:01</div>
-      </div>
-
-      <div class="track">
-        <div class="num">05</div>
-        <div class="t-info">
-          <div class="t-name">Final Transmission</div>
-          <div class="t-artist">Deep Frequency</div>
-        </div>
-        <div class="t-len">3:44</div>
-      </div>
-
+    <div class="track">
+      <div class="track-name">Night Protocol</div>
+      <div class="track-artist">Archive Division</div>
     </div>
 
   </div>
 
 </div>
+
+<audio id="audio" src="songs/nightprotocol.mp3"></audio>
+
+<script>
+
+const audio = document.getElementById("audio");
+const playBtn = document.getElementById("playBtn");
+const fill = document.getElementById("fill");
+const current = document.getElementById("current");
+const duration = document.getElementById("duration");
+
+let playing = false;
+
+playBtn.onclick = () => {
+
+  if(!playing){
+    audio.play();
+    playBtn.innerHTML = "❚❚";
+    playing = true;
+  } else {
+    audio.pause();
+    playBtn.innerHTML = "▶";
+    playing = false;
+  }
+
+};
+
+audio.addEventListener("timeupdate", () => {
+
+  const progress =
+    (audio.currentTime / audio.duration) * 100;
+
+  fill.style.width = progress + "%";
+
+  current.innerHTML = format(audio.currentTime);
+
+});
+
+audio.addEventListener("loadedmetadata", () => {
+
+  duration.innerHTML = format(audio.duration);
+
+});
+
+function format(time){
+
+  const mins = Math.floor(time / 60);
+  const secs = Math.floor(time % 60);
+
+  return mins + ":" +
+    (secs < 10 ? "0" : "") + secs;
+
+}
+
+</script>
+
+</body>
+</html>
+
+
